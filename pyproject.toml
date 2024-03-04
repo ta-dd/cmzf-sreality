@@ -8,7 +8,6 @@ packages = [{include = "cmzf_sreality"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-redataprocessing = "^0.0.26"
 
 
 [build-system]
