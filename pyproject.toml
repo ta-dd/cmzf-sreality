@@ -8,6 +8,13 @@ packages = [{include = "cmzf_sreality"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+aiohttp = "^3.9.3"
+certifi = "^2024.2.2"
+nest-asyncio = "^1.6.0"
+numpy = "^1.26.4"
+pandas = "^2.2.1"
+requests = "^2.31.0"
+tqdm = "^4.66.2"
 
 
 [build-system]

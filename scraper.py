@@ -1,4 +1,9 @@
+import sys
+
+sys.path.append("redataprocessing/redataprocessing/src")
+
 import redataprocessing as rdp
+
 
 kraje = [
     "Jihočeský kraj",
