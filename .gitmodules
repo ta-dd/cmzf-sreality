@@ -1,0 +1,3 @@
+[submodule "redataprocessing"]
+	path = redataprocessing
+	url = https://github.com/vojtechkaniaedu/re_data_processing.git
