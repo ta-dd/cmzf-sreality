@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cmzf-sreality"
+version = "0.1.0"
+description = ""
+authors = ["ta-dd <141835908+ta-dd@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "cmzf_sreality"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+redataprocessing = "^0.0.26"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
