@@ -4,6 +4,15 @@ sys.path.append("redataprocessing/redataprocessing/src")
 
 import redataprocessing as rdp
 
+rdp.get_re_offers(
+    path_to_sqlite="test7.sqlite",
+    category_main="landplots",
+    category_type="sale",
+    locality_region=["Liberecký kraj"],
+)
+
+sys.exit()
+
 
 kraje = [
     "Jihočeský kraj",
@@ -26,7 +35,7 @@ for kraj in kraje:
     print(f"-----------------------------------------")
     print(f"--- Downloading {kraj} ---")
     rdp.get_re_offers(
-        path_to_sqlite="estate_data.sqlite2",
+        path_to_sqlite="test2.sqlite",
         category_main="landplots",
         category_type="sale",
         locality_region=[kraj],
