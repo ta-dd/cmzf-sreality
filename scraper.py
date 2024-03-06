@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("redataprocessing/redataprocessing/src")
+sys.path.append("cmzf-redataprocessing/redataprocessing/src")
 
 import redataprocessing as rdp
 
