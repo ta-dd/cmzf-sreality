@@ -59,10 +59,6 @@ def download_kraj(
         try:
             print(f"-----------------------------------------")
             print(f"--- Downloading {kraj} (Attempt {attempts + 1}/{max_retries}) ---")
-            # TODO downloading offers could work (and get written to DB), then descriptions could fail, causing offers to be duplicated.
-            # solution: rewrite rdp.get_re_offers logic OR write a function to deduplicate the sqlite db / pandas dataframe to keep only one record for each unique hash
-            # if the description download is reading the list of offers from the DB, it may be easier to just deduplicate the resulting DB
-            # or just add the retry decorator to the list downloading function
             db_table_name = rdp.get_re_offers(
                 path_to_sqlite=path_to_sqlite,
                 category_main=category_main,
@@ -73,7 +69,7 @@ def download_kraj(
             return  # Exit the loop and function on success
         except Exception as e:
             print(
-                f"Error downloading data for {kraj}: {str(e)}. Retrying in {delay} seconds..."
+                f"Error downloading data for {kraj}: {str(e)}. Ran attempt #{attempts+1} out of {max_retries}. Retrying in {delay} seconds..."
             )
             attempts += 1
             time.sleep(delay)
@@ -83,7 +79,7 @@ def download_kraj(
 
 
 for kraj in kraje:
-    download_kraj(kraj, DB_NAME, "landplots", "sale")
+    download_kraj(kraj, DB_NAME, "landplots", "sale", max_retries=1)
 
 merge_tables(db_table_name=db_table_name)
 
