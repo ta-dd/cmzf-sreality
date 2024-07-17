@@ -1,6 +1,7 @@
 import sys
 import sqlite3
 from datetime import datetime
+import time
 import pandas as pd
 import re
 
@@ -46,15 +47,44 @@ kraje = [
     "Jihomoravský kraj",
 ]
 
-for kraj in kraje:
-    print(f"-----------------------------------------")
-    print(f"--- Downloading {kraj} ---")
-    db_table_name = rdp.get_re_offers(
-        path_to_sqlite=DB_NAME,
-        category_main="landplots",
-        category_type="sale",
-        locality_region=[kraj],
+db_table_name = None
+
+
+def download_kraj(
+    kraj, path_to_sqlite, category_main, category_type, max_retries=5, delay=3
+):
+    global db_table_name
+    attempts = 0
+    while attempts < max_retries:
+        try:
+            print(f"-----------------------------------------")
+            print(f"--- Downloading {kraj} (Attempt {attempts + 1}/{max_retries}) ---")
+            # TODO downloading offers could work (and get written to DB), then descriptions could fail, causing offers to be duplicated.
+            # solution: rewrite rdp.get_re_offers logic OR write a function to deduplicate the sqlite db / pandas dataframe to keep only one record for each unique hash
+            # if the description download is reading the list of offers from the DB, it may be easier to just deduplicate the resulting DB
+            # or just add the retry decorator to the list downloading function
+            db_table_name = rdp.get_re_offers(
+                path_to_sqlite=path_to_sqlite,
+                category_main=category_main,
+                category_type=category_type,
+                locality_region=[kraj],
+            )
+            print(f"--- Successfully downloaded and committed data for {kraj} ---")
+            return  # Exit the loop and function on success
+        except Exception as e:
+            print(
+                f"Error downloading data for {kraj}: {str(e)}. Retrying in {delay} seconds..."
+            )
+            attempts += 1
+            time.sleep(delay)
+    print(
+        f"\n\n\n--- Failed to download data for {kraj} after {max_retries} attempts ---\n\n\n"
     )
+
+
+for kraj in kraje:
+    download_kraj(kraj, DB_NAME, "landplots", "sale")
+
 merge_tables(db_table_name=db_table_name)
 
 
@@ -64,7 +94,7 @@ conn = sqlite3.connect(DB_NAME)
 # Query the table and load it into a DataFrame
 df = pd.read_sql_query("SELECT * FROM MERGED_LANDPLOTS_SALE", conn)
 
-df.to_csv(f"{DB_NAME.split('.')[0]}.csv", index=False)
+df.to_csv(f"sreality_{DB_NAME.split('.')[0]}.csv", index=False)
 
 conn.close()
 
